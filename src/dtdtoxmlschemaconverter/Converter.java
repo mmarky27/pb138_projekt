@@ -9,7 +9,10 @@ package dtdtoxmlschemaconverter;
 import dtdtoxmlschemaconverter.Entities.Attribute;
 import dtdtoxmlschemaconverter.Entities.Element;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -20,32 +23,44 @@ public class Converter {
     public static List<Element> parseDTD(String dtd) {
         
         List<Element> elements = new ArrayList<>();
-
-        dtd = dtd.substring(dtd.indexOf("<") + 1, dtd.indexOf(">"));
+        List<Attribute> attributes = new ArrayList<>();
+        
+        dtd = dtd.substring(dtd.indexOf("<") + 1, dtd.lastIndexOf(">"));
         String[] lines = dtd.split(">\\s*<");
+        
         for (String line : lines) {
             if (line.startsWith("!ELEMENT")) {
-                Element elem = parseElem(line);
+                Element elem = parseElement(line);
                 elements.add(elem);
             }else if (line.startsWith("!ATTLIST")){
-                Attribute attr = parseAttr(line);
-                for (Element elem : elements){
-                    if (elem.getName().equals(attr.getElemName())){
-                        elem.addAttribute(attr);
-                    }
+                attributes.addAll(parseAttributes(line));
+            }
+        }
+        
+        for (Attribute attr : attributes) {
+            String elemName = attr.getElemName();
+            
+            for (Element elem : elements) {
+                if (elemName.equals(elem.getName())) {
+                    elem.addAttribute(attr);
                 }
             }
         }
         
-        return null;
+        return elements;
     }
 
-    private static Element parseElem(String elem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static Element parseElement(String elem) {
+        String[] items = elem.split(" ");
+        return new Element(items[1], items[2]);
     }
 
-    private static Attribute parseAttr(String attr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static List<Attribute> parseAttributes(String attrs) {
+        throw new UnsupportedOperationException("Not suppported yet.");
+    }
+    
+    private static Attribute parseAttribute(String attr) {
+        throw new UnsupportedOperationException("Not suppported yet.");
     }
     
     public static String assembleXMLSchema(List<Element> elements) {

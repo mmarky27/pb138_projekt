@@ -20,8 +20,7 @@ public class Converter {
     public static List<Element> parseDTD(String dtd) {
         
         List<Element> elements = new ArrayList<>();
-        
-        dtd = dtd.substring(dtd.indexOf("[") + 1, dtd.indexOf("]"));
+
         dtd = dtd.substring(dtd.indexOf("<") + 1, dtd.indexOf(">"));
         String[] lines = dtd.split(">\\s*<");
         for (String line : lines) {

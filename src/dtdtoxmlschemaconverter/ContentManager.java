@@ -20,7 +20,7 @@ public class ContentManager {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public static void insertXMLSchema(String xmlSchema) {
+    public static void createXMLSchema(String xmlSchema) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

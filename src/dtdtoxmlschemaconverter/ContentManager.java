@@ -16,7 +16,7 @@ public class ContentManager {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    private static String loadFile(String path) {
+    public static String loadFile(String path) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
@@ -24,7 +24,7 @@ public class ContentManager {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    private static void saveFile(String file) {
+    public static void saveFile(String file) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

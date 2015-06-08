@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -23,13 +25,18 @@ public class ContentManager {
     
     public static String extractDTD(String path) throws IOException, Exception { 
         String dtd;
+        String systemId = null;
         String fileString = loadFile(path);//obsah celeho .xml souboru ulozen jako string
         //hledam referenci dtd (predpoklad: .xml soubor obsahuje vzdy validni a spravne dtd)
         //1.interne (tj. systemId musi byt null) -> nactu ten interni dtd string -> predam dal (return)
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(path);
-        String systemId = doc.getDoctype().getSystemId();
+        try {
+            DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
+            DocumentBuilder db=dbf.newDocumentBuilder();
+            Document doc=db.parse(new File(path));
+            systemId = doc.getDoctype().getSystemId();
+          } catch (  SAXException | ParserConfigurationException | IOException e) {
+              System.out.println("error");
+          }
         
         if (systemId == null) {
             System.out.println("DTD je v interni podobe.");

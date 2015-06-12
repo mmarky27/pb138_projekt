@@ -31,8 +31,7 @@ public class Main {
         //String extracted = ContentManager.extractDTD(path);
         //String xmlSchema = Converter.assembleXMLSchema(Converter.parseDTD(extracted));
         //vytvoreni souboru .xsd:
-        ContentManager.createXMLSchema("<schema><taktak></taktak></schema>"); //pak tam bude xmlSchema string
-        //ContentManager.saveFile(path);
+        //ContentManager.createXMLSchema("<schema><taktak></taktak></schema>"); //pak tam bude xmlSchema string
         
     }
 }

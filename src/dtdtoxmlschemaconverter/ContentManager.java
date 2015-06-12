@@ -7,9 +7,16 @@
 package dtdtoxmlschemaconverter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -89,11 +96,45 @@ public class ContentManager {
     }
     
     
-    public static void createXMLSchema(String xmlSchema) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public static void createXMLSchema(String xmlSchema) throws IOException {
+        //ulozi xmlschema(string) do .xsd a pozmeni puv.xml -> ulozi ho jako novy soubor (neprepisuje!) jiz jako xsd
+        String path = Main.path;
+        Path p = Paths.get(path);
+        Path pp = p.getParent(); //snazim se vratit k adresari - ve stejnem jak puvodni xml bude i xsd
+        try {
+            File toSave = new File(pp.toString()+"/newschema.xsd");
+            FileOutputStream is = new FileOutputStream(toSave);
+            OutputStreamWriter osw = new OutputStreamWriter(is);    
+            Writer w = new BufferedWriter(osw);
+            w.write(xmlSchema);
+            w.close();
+        } catch (IOException e) {
+            System.err.println("Problem writing to the file newschema.xsd");
+        }
+        
+        //V puvodním XML souboru zmenit hlavicku (misto DTD) aby se odkazovalo na soubor s XML schematem
+        String toChange = loadFile(path);
+        //TODO
+        
+       
+        //puvodni soubor (nyni jiz pozmeneny - zmena je v tom stringu,ktery predam) ulozim jako novy soubor
+        saveFile(toChange);
     }
     
+    
+    //saveFile predavam uz hotovy string vytvoreny createXMLSchema metodou
     public static void saveFile(String file) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String path = Main.path;
+        Path p = Paths.get(path);
+        Path pp = p.getParent(); 
+        try {
+            File newTextFile = new File(pp.toString()+"/newXml_WithXsd.txt");
+            FileWriter fw = new FileWriter(newTextFile);
+            fw.write(file);
+            fw.close();
+        } catch (IOException iox) {
+            iox.printStackTrace();
+        }
     }
+    
 }

@@ -11,7 +11,7 @@ package dtdtoxmlschemaconverter.DataClasses;
  * @author Patrik
  */
 public class Attribute {
-    
+
     private String parent;
     private String name;
     private String content;
@@ -22,48 +22,33 @@ public class Attribute {
         this.content = content;
     }
 
-    /**
-     * @return the name
-     */
+    public String getParent() {
+        return parent;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the type
-     */
     public String getContent() {
         return content;
     }
 
-    /**
-     * @param type the type to set
-     */
-    public void setContent(String type) {
+    public void setContent(String content) {
         this.content = content;
     }
 
-    /**
-     * @return the parent
-     */
-    public String getElemName() {
-        return parent;
+    public String toString(){
+        return "ATT: " + parent + " || " + name +
+                " || " + content;
     }
-
-    /**
-     * @param elemName the parent to set
-     */
-    public void setElemName(String elemName) {
-        this.parent = elemName;
-    }
-    
-    
     
 }

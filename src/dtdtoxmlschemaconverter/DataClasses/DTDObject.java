@@ -79,4 +79,9 @@ public class DTDObject {
     public void setType(ObjectType type) {
         this.type = type;
     }
+
+    public String toString(){
+        return name + " || " + type + " || " + content;
+
+    }
 }

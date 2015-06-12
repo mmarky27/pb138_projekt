@@ -24,49 +24,6 @@ public class Converter {
     
     private static final String STRINGTYPE = "type=\"string\"";
     
-    public static List<DTDObject> parseDTD(String dtd) {
-        
-        List<DTDObject> elements = new ArrayList<>();
-        List<Attribute> attributes = new ArrayList<>();
-        
-        dtd = dtd.substring(dtd.indexOf("<") + 1, dtd.lastIndexOf(">"));
-        String[] lines = dtd.split(">\\s*<");
-        
-        for (String line : lines) {
-            if (line.startsWith("!ELEMENT")) {
-                DTDObject elem = parseElement(line);
-                elements.add(elem);
-            }else if (line.startsWith("!ATTLIST")){
-                attributes.addAll(parseAttributes(line));
-            }
-        }
-        
-        for (Attribute attr : attributes) {
-            String elemName = attr.getElemName();
-            
-            for (DTDObject elem : elements) {
-                if (elemName.equals(elem.getName())) {
-                    elem.addAttribute(attr);
-                }
-            }
-        }
-        
-        return elements;
-    }
-
-    private static DTDObject parseElement(String elem) {
-        String[] items = elem.split(" ");
-        return new DTDObject(items[1], ObjectType.fromString(items[0]), items[2]);
-    }
-
-    private static List<Attribute> parseAttributes(String attrs) {
-        throw new UnsupportedOperationException("Not suppported yet.");
-    }
-    
-    private static Attribute parseAttribute(String attr) {
-        throw new UnsupportedOperationException("Not suppported yet.");
-    }
-    
     public static String assembleXMLSchema(List<DTDObject> objects) {
         
         StringBuilder sb = new StringBuilder();

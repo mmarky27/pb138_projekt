@@ -96,13 +96,34 @@ public class Converter {
         }
         appendWithLineSep(sb, "");
         
-        for (DTDObject notat : notats) {
-            assembleNotation(notat, sb);
+        if (!notats.isEmpty()) {
+            for (DTDObject notat : notats) {
+                assembleNotation(notat, sb);
+            }
+        }
+        
+        if (!entits.isEmpty()) {
+            ArrayList<String> elemNames = new ArrayList<>();
+            for (DTDObject elem : elems) {
+                elemNames.add(elem.getName());
+            }
+            String rootElemName = "";
+            for (String elemName : elemNames) {
+                if (sb.indexOf(MessageFormat.format("ref=\"{0}\"", elemName)) == -1) {
+                    rootElemName = elemName;
+                    break;
+                }
+            }
+            for (DTDObject entity : entits) {
+                appendWithLineSep(sb, MessageFormat.format("<!DOCTYPE {0} [", rootElemName));
+                assembleEntity(entity, sb);
+                appendWithLineSep(sb, "]>");
+            }
         }
         return sb.toString();
     }
     
-    public static String assembleElem(DTDObject elem, StringBuilder sb) {
+    private static String assembleElem(DTDObject elem, StringBuilder sb) {
         
         String content = elem.getContent();
         ArrayList<Attribute> attrs = (ArrayList)elem.getAttributes();
@@ -270,7 +291,7 @@ public class Converter {
         return content;
     }
 
-    public static void assembleNotation(DTDObject notat, StringBuilder sb) {
+    private static void assembleNotation(DTDObject notat, StringBuilder sb) {
         
         String content = notat.getContent();
         ArrayList<String> subconts = splitContent(content, " ", "\"", "\"");
@@ -280,5 +301,9 @@ public class Converter {
         }else {
             appendWithLineSep(sb, " />");
         }
+    }
+
+    private static void assembleEntity(DTDObject entity, StringBuilder sb) {
+        appendWithLineSep(sb, MessageFormat.format("<!ENTITY {0} {1}", entity.getName(), entity.getContent()));
     }
 }

@@ -9,14 +9,14 @@ import java.util.*;
 /**
  * Created by jnkre_000 on 6/12/2015.
  */
-public class Parser {
+public class DTDParser {
 
     private String unparsedDTD = null;
     private List<DTDObject> objects = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
 
 
-    public Parser(String unparsedDTD){
+    public DTDParser(String unparsedDTD){
         if(unparsedDTD == null){
             throw new NullPointerException("Parser(constructor): unparsedDTD is null");
         }
@@ -30,7 +30,7 @@ public class Parser {
 
 
     public static List<DTDObject> output(String unparsedDTD){
-        Parser tmp = new Parser(unparsedDTD);
+        DTDParser tmp = new DTDParser(unparsedDTD);
         tmp.parse();
 
         return tmp.getObjects();

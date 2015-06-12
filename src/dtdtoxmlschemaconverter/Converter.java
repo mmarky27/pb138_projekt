@@ -71,7 +71,9 @@ public class Converter {
         
         StringBuilder sb = new StringBuilder();
         
-        //TO DO: hlavicku a namespace
+        appendWithLineSep(sb, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        appendWithLineSep(sb, "");
+        appendWithLineSep(sb, "<schema targetNamespace=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\">");
         List<DTDObject> elems = new ArrayList<>();
         List<DTDObject> notats = new ArrayList<>();
         List<DTDObject> entits = new ArrayList<>();
@@ -120,6 +122,7 @@ public class Converter {
                 appendWithLineSep(sb, "]>");
             }
         }
+        appendWithLineSep(sb, "</schema>");
         return sb.toString();
     }
     
@@ -171,11 +174,85 @@ public class Converter {
     }
 
     private static void assembleAttrs(List<Attribute> attrs, StringBuilder sb) {
+        if (!attrs.isEmpty()) {
+            for (Attribute attr : attrs) {
+                assembleAttr(attr.getName(), attr.getContent(), sb);
+            }
+        } else {
         sb.append("");
+        }
     }
     
-    private static String assembleAttr(Attribute attr) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static void assembleAttr(String name, String content, StringBuilder sb) {
+        
+        sb.append(MessageFormat.format("<attribute name=\"{0}\"", name));
+        String type;
+        content = content.replaceAll("\\s+", " ").trim();
+        
+        if (content.startsWith("(")) {
+            int indOfRBracket = content.indexOf(")");
+            type = content.substring(0, indOfRBracket + 1);
+            content = content.substring(indOfRBracket + 1);
+            content = assembleAttrContent(content, sb);
+            ArrayList<String> enums = splitContent(type.substring(1, type.length() - 1), "|", "(", ")");
+            appendWithLineSep(sb, ">");
+            appendWithLineSep(sb, "<simpleType>");
+            appendWithLineSep(sb, "<restriction>");
+            for (String en : enums) {
+                appendWithLineSep(sb, MessageFormat.format("<enumeration value=\"{0}\"", en));
+            }
+            appendWithLineSep(sb, "</restriction>");
+            appendWithLineSep(sb, "</simpleType>");
+            appendWithLineSep(sb, "</attribute>");
+        }else {
+            int indOfSpace = content.indexOf(" ");
+            type = content.substring(0, indOfSpace);
+            if (type.equals("CDATA")) {
+                type = "string";
+            }
+            sb.append(MessageFormat.format(" type=\"{0}\"", type));
+            content = content.substring(indOfSpace + 1);
+            content = assembleAttrContent(content, sb);
+            appendWithLineSep(sb, " />");
+        }
+        content = content.trim();
+        
+        if (!content.isEmpty()) {
+            int indOfSpace = content.indexOf(" ");
+            name = content.substring(0, indOfSpace);
+            content = content.substring(indOfSpace + 1);
+            assembleAttr(name, content, sb);
+        }
+    }
+    
+    private static String assembleAttrContent(String content, StringBuilder sb) {
+        content = content.trim();
+        String value;
+        
+        if (content.startsWith("\"")) {
+            int indOfQuote = content.indexOf("\"", 1);
+            value = content.substring(0, indOfQuote + 1);
+            content = content.substring(indOfQuote + 1);
+            sb.append(MessageFormat.format(" default={0}", value));
+        }else{
+            int indOfSpace = content.indexOf(" ");
+            value = content.substring(0, indOfSpace);
+            content = content.substring(indOfSpace + 1).trim();
+            switch (value) {
+                case "#REQUIRED":
+                    sb.append(MessageFormat.format(" use={0}", "required"));
+                    break;
+                case "#IMPLIED":
+                    sb.append(MessageFormat.format(" use={0}", "optional"));
+                    break;
+                case "#FIXED":
+                    int indOfQuote = content.indexOf("\"", 1);
+                    value = content.substring(0, indOfQuote + 1);
+                    content = content.substring(indOfQuote + 1);
+                    sb.append(MessageFormat.format(" fixed={0}", value));
+            }
+        }
+        return content;
     }
 
     private static void appendWithLineSep(StringBuilder sb, String typestring) {
@@ -282,7 +359,7 @@ public class Converter {
 
     private static String trimOFSubcont(int indOfDelim, ArrayList<String> subconts, String content) {
         if (indOfDelim == -1) {
-            subconts.add(content);
+            subconts.add(content.trim());
             content = "";
         }else {
             subconts.add(content.substring(0, indOfDelim));

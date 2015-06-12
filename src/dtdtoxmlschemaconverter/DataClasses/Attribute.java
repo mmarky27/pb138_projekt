@@ -12,12 +12,12 @@ package dtdtoxmlschemaconverter.DataClasses;
  */
 public class Attribute {
     
-    private String elemName;
+    private String parent;
     private String name;
     private String content;
     
-    public Attribute(String elemName, String name, String content) {
-        this.elemName = elemName;
+    public Attribute(String parent, String name, String content) {
+        this.parent = parent;
         this.name = name;
         this.content = content;
     }
@@ -39,29 +39,29 @@ public class Attribute {
     /**
      * @return the type
      */
-    public String getType() {
+    public String getContent() {
         return content;
     }
 
     /**
      * @param type the type to set
      */
-    public void setType(String type) {
+    public void setContent(String type) {
         this.content = content;
     }
 
     /**
-     * @return the elemName
+     * @return the parent
      */
     public String getElemName() {
-        return elemName;
+        return parent;
     }
 
     /**
-     * @param elemName the elemName to set
+     * @param elemName the parent to set
      */
     public void setElemName(String elemName) {
-        this.elemName = elemName;
+        this.parent = elemName;
     }
     
     

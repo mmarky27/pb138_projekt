@@ -22,8 +22,6 @@ import java.util.TreeMap;
  */
 public class Converter {
     
-    private static final String STRINGTYPE = "type=\"string\"";
-    
     public static String assembleXMLSchema(List<DTDObject> objects) {
         
         StringBuilder sb = new StringBuilder();
@@ -91,7 +89,7 @@ public class Converter {
         sb.append(MessageFormat.format("<element name=\"{0}\" ", elem.getName()));
         if (content.equals("(#PCDATA)") || content.equals("(#CDATA)")) {
             if (elem.getAttributes().isEmpty()) {
-                appendWithLineSep(sb, STRINGTYPE + " />");
+                appendWithLineSep(sb, "type=\"string\" />");
             }else{
                 appendWithLineSep(sb, ">");
                 appendWithLineSep(sb, "<complexType>");

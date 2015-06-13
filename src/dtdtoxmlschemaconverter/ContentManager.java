@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
@@ -100,7 +102,7 @@ public class ContentManager {
         //ulozi xmlschema(string) do .xsd a pozmeni puv.xml -> ulozi ho jako novy soubor (neprepisuje!) jiz jako xsd
         String path = Main.path;
         Path p = Paths.get(path);
-        Path pp = p.getParent(); //snazim se vratit k adresari - ve stejnem jak puvodni xml bude i xsd
+        Path pp = p.getParent(); //vracim se k adresari - ve stejnem jak puvodni xml bude i xsd
         try {
             File toSave = new File(pp.toString()+"/newschema.xsd");
             FileOutputStream is = new FileOutputStream(toSave);
@@ -112,13 +114,45 @@ public class ContentManager {
             System.err.println("Problem writing to the file newschema.xsd");
         }
         
-        //V puvodním XML souboru zmenit hlavicku (misto DTD) aby se odkazovalo na soubor s XML schematem
-        String toChange = loadFile(path);
-        //TODO
-        
+        //TODO: V puvodním XML souboru zmenit hlavicku (misto DTD) aby se odkazoval na soubor s XML schematem
+        String toInsert = loadFile(path); //z tohoto stringu budu kopirovat jen radky bez dtd do stringu toSave
+        String toSave = null; //text, ktery pak ulozim do souboru (s referenci xsd tj. bez dtd)
+        //ziskam korenovy element, za nej pak napojim toAdd
+        Element rootEl=null; //korenovyelement
+        try {
+            DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
+            DocumentBuilder db=dbf.newDocumentBuilder();
+            Document doc=db.parse(new File(path));
+            rootEl = doc.getDocumentElement();
+          } catch (  SAXException | ParserConfigurationException | IOException e) {
+              System.out.println("error");
+          }
        
+        //toto se prida za korenovy element
+        String toAdd = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema\" xsi:noNamespaceSchemaLocation=\"newschema.xsd\" ";   
+        
+        //prochazim radek po radku az na konec toInsert -> vkladam do toSave, kdyz je tam dtd tak preskakuju-nevkladam
+        String line;
+        BufferedReader reader = new BufferedReader(new StringReader(toInsert));
+        try {
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("<!DOCTYPE")) {
+                    do { 
+                        continue; //preskakuju radky s dtd, dokud nenarazim az na kor.el.
+                    } while (!(line.startsWith("<"+rootEl.getTextContent())));
+                }
+                toSave.concat(line); //napojuju radky bez dtd
+                if (line.startsWith("<"+rootEl.getTextContent())) {
+                    //napojime za koren.element / pripadne jeste pred jeho id / toAdd
+                    line.replaceFirst(" ",toAdd); //do mezery vlozim toAdd-text uz je ohraniceny mezerami->mezery nechybi
+                }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        
         //puvodni soubor (nyni jiz pozmeneny - zmena je v tom stringu,ktery predam) ulozim jako novy soubor
-        saveFile(toChange);
+        saveFile(toSave);
     }
     
     

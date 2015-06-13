@@ -22,7 +22,7 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        if(args.length < 0){
+        if(args.length > 0){
             path =  args[0];
         }else{
             System.out.println("Please enter .xml file path: ");

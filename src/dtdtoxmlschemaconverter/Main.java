@@ -47,7 +47,7 @@ public class Main {
         String xmlSchema = Converter.assembleXMLSchema(tmp);
 
         //vytvoreni souboru .xsd:
-        //ContentManager.createXMLSchema("<schema><taktak></taktak></schema>");
-        // pak tam bude xmlSchema string
+        ContentManager.createXMLSchema(xmlSchema);
+    
     }
 }

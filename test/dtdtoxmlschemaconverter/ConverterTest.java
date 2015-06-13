@@ -98,7 +98,6 @@ public class ConverterTest {
             + "<element ref=\"jmeno\" />" + s
             + "<element ref=\"narozen\" />"+ s
             + "</sequence>" + s
-                //nemam pouzit xs:string?
             + "<attribute name=\"id\" type=\"string\" use=\"required\"" + s
             + "<attribute name=\"id\" type=\"string\"" + s
                 //jak je to s tim enumem, se mi moc nechce psat jako nejake restriction, pockam, jak to udela Patas!
@@ -134,18 +133,22 @@ public class ConverterTest {
 
     @Test
     public void testAssembleAttr() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException { //returns String
-        String expected = "<attribute name=\"plat\" type=\"string\"";
+        String expected = "<attribute name=\"plat\" type=\"string\">";
         Method method = Converter.class.getDeclaredMethod("assembleAttr", new Class[]{Attribute.class});
         method.setAccessible(true);
         
         String result = (String) method.invoke(new Converter(), new java.lang.Object[]{ attributes.get(1)});
+        assertEquals(expected, result);
+        
+        expected = "<attribute name=\"id\" type=\"string\" use=\"required\">";
+        result = (String) method.invoke(new Converter(), new java.lang.Object[]{ attributes.get(0)});
         assertEquals(expected, result);
     }
 
     @Test
     public void testAssembleAttrs() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         String expected = "<attribute name=\"plat\" type=\"string\"\n"
-                + "<attribute name=\"id\" type=\"string\" use=\"required\"";
+                + "<attribute name=\"id\" type=\"string\" use=\"required\">";
         //To nevim, jestli bude fungovat s tim List.class, uvidime rano
         Method method = Converter.class.getDeclaredMethod("assembleAttrs", new Class[]{List.class, StringBuilder.class});
         method.setAccessible(true);
@@ -191,7 +194,12 @@ public class ConverterTest {
         method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev?)"});
         assertEquals(expected, sb.toString());
         
-        //TODO all pripad
+        expected = "<all minOccurs=\"0\">" + s
+            + "<element ref=\"nazev\" />" + s
+            + "</all>" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{sb, "(#PCDATA | nazev)"});
+        assertEquals(expected, sb.toString());
     }
 
     @Test
@@ -227,23 +235,19 @@ public class ConverterTest {
         
         StringBuilder sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
-        System.out.println(sb.toString());
         assertEquals(expected, sb.toString());
         
         notation.setContent("PUBLIC \"JPG 1.0\" \"image/jpeg\"");
         expected = "<notation name=\"jpg\" public=\"JPG 1.0\" system=\"image/jpeg\" />" + s;
         sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
-        System.out.println(sb.toString());
         assertEquals(expected, sb.toString());
 
         notation.setContent("jpg SYSTEM \"image/jpeg\"");
         expected = "<notation name=\"jpg\" public=SYSTEM system=\"image/jpeg\" />" + s;
         sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
-        System.out.println(sb.toString());
         assertEquals(expected, sb.toString());
-
     }
     
 }

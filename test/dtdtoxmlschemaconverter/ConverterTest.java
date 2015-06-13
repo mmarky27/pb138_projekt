@@ -27,6 +27,8 @@ public class ConverterTest {
     private String dtdToParse3;
     private List<DTDObject> elements = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
+    private String s = System.lineSeparator();
+
     
     @Before
     public void setUp() {
@@ -67,78 +69,19 @@ public class ConverterTest {
                 + "  <!ELEMENT narozen     (#CDATA)>";
     }
     
-    /**
-     * Test of parseDTD method, of class Converter.
-     */
-    @Test
-    public void testParseDTD() {
-        List<DTDObject> result = Converter.parseDTD(dtdToParse);
-        List<DTDObject> result2 = Converter.parseDTD(dtdToParse2);
-        List<DTDObject> result3 = Converter.parseDTD(dtdToParse3);
-        
-        assertEquals(elements.size(), result.size());
-        assertArrayEquals(elements.toArray(), result.toArray());
-        assertEquals(elements.size(), result2.size());
-        assertArrayEquals(elements.toArray(), result2.toArray());
-
-        assertTrue(elements.size() != result3.size());
-    }
-
-    @Test
-    public void testParseElement() throws NoSuchMethodException, InvocationTargetException, IllegalArgumentException, IllegalAccessException {
-        Method method = Converter.class.getDeclaredMethod("parseElement", new Class[]{String.class});
-        method.setAccessible(true);
-        DTDObject result = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (jmeno, prijmeni)>"});
-        DTDObject result2 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (prijmeni, jmeno)>"});
-        DTDObject result3 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (jmeno | prijmeni)>"});
-        DTDObject result4 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnankyne   (jmeno, prijmeni)>"});
-        
-        assertEquals(elements.get(0), result);
-        assertTrue(!elements.get(0).equals(result2));
-        assertTrue(!elements.get(0).equals(result3));
-        assertTrue(!elements.get(0).equals(result4));
-    }
-
-    @Test
-    public void testParseAttributes() throws NoSuchMethodException, InvocationTargetException, IllegalArgumentException, IllegalAccessException {
-        Method method = Converter.class.getDeclaredMethod("parseAttributes", new Class[]{String.class});
-        method.setAccessible(true);
-        List<Attribute> result = (List<Attribute>) method.invoke(
-                new Converter(),
-                new java.lang.Object[]{
-                    "  <!ATTLIST zamestnanec\n"
-                + "            id          CDATA   #REQUIRED>\n"
-                + "            plat        CDATA   #IMPLIED\n"
-                + "            pohlavi     (muz | zena | jine)   #IMPLIED>"});
-        
-        assertEquals(attributes.size(), result.size());
-        assertArrayEquals(attributes.toArray(), result.toArray());
-    }
-
-    @Test
-    public void testParseAttribute() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException { //returns Attribute
-        Method method = Converter.class.getDeclaredMethod("parseAttribute", new Class[]{String.class});
-        method.setAccessible(true);
-        Attribute a = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnanec            id          CDATA   #REQUIRED>"});
-        Attribute a2 = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnanec            id          CDATA   #IMPLIED>"});
-        Attribute a3 = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnavatel            id          CDATA   #REQUIRED>"});
-        
-        assertEquals(attributes.get(0), a);
-        assertTrue(!attributes.get(0).equals(a2));
-        assertTrue(!attributes.get(0).equals(a3));
-    }
-
      /**
      * Test of assembleXMLSchema method, of class Converter.
      */
     @Test
     public void testAssembleXMLSchema() {
         String result = Converter.assembleXMLSchema(elements);
-        String result2 = Converter.assembleXMLSchema(Converter.parseDTD(dtdToParse));
-        String result3 = Converter.assembleXMLSchema(Converter.parseDTD(dtdToParse2));
-        String result4 = Converter.assembleXMLSchema(Converter.parseDTD(dtdToParse3));
+        String result2 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse));
+        String result3 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse2));
+        String result4 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse3));
 
         //TODO
+        System.out.println(result);
+        System.out.println("here");
         /*assertEquals(expected, result);
         assertEquals(expected, result2);
         assertTrue(!expected.equals(result3));
@@ -149,7 +92,6 @@ public class ConverterTest {
     
     @Test
     public void testAssembleElem() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        String s = System.lineSeparator();
         String expected = "<element name=\"zamestnanec\" >" + s
             + "<complexType>" + s
             + "<sequence>" + s
@@ -216,19 +158,39 @@ public class ConverterTest {
     
     @Test
     public void testAssembleComplexContent() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        //TODO
-        String expected = "TODO";
+        String expected = "<sequence minOccurs=\"0\" maxOccurs=\"unbounded\">" + s
+                + "<element ref=\"nazev\" />" + s
+                + "<element ref=\"autor\" />" + s
+                + "</sequence>" + s;
         Method method = Converter.class.getDeclaredMethod("assembleComplexContent", new Class[]{StringBuilder.class, String.class});
         method.setAccessible(true);
-       
         StringBuilder sb = new StringBuilder();
-        method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev, autor*)"});
-        
+        method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev, autor*)"});        
         assertEquals(expected, sb.toString());
         
-        //TODO + a ?
-        //TODO sequence
-        //TODO choice pripad
+        expected = "<choice>" + s
+                + "<element ref=\"nazev\" />" + s
+                + "<element ref=\"autor\" />" + s
+                + "</choice>" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev | autor)"});
+        assertEquals(expected, sb.toString());
+        
+        expected = "<sequence maxOccurs=\"unbounded\">" + s
+            + "<element ref=\"nazev\" />" + s
+            + "<element ref=\"autor\" />" + s
+            + "</sequence>" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev, autor)+"});
+        assertEquals(expected, sb.toString());
+        
+        expected = "<sequence minOccurs=\"0\">" + s
+            + "<element ref=\"nazev\" />" + s
+            + "</sequence>" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{sb, "(nazev?)"});
+        assertEquals(expected, sb.toString());
+        
         //TODO all pripad
     }
 
@@ -257,14 +219,31 @@ public class ConverterTest {
     }
 
     @Test
-    public void testAssembleNotation() throws NoSuchMethodException {
-        //TODO
-        String expected = "TODO NOTATION";
+    public void testAssembleNotation() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DTDObject notation = new DTDObject("jpg", ObjectType.NOTATION, "PUBLIC \"JPG 1.0\"");
+        String expected = "<notation name=\"jpg\" public=\"JPG 1.0\" />" + s;
         Method method = Converter.class.getDeclaredMethod("assembleNotation", new Class[]{DTDObject.class, StringBuilder.class});
         method.setAccessible(true);
+        
         StringBuilder sb = new StringBuilder();
-        //method.invoke(new Converter(), new java.lang.Object[]{  });
-        //TODO
+        method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
+        System.out.println(sb.toString());
+        assertEquals(expected, sb.toString());
+        
+        notation.setContent("PUBLIC \"JPG 1.0\" \"image/jpeg\"");
+        expected = "<notation name=\"jpg\" public=\"JPG 1.0\" system=\"image/jpeg\" />" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
+        System.out.println(sb.toString());
+        assertEquals(expected, sb.toString());
+
+        notation.setContent("jpg SYSTEM \"image/jpeg\"");
+        expected = "<notation name=\"jpg\" public=SYSTEM system=\"image/jpeg\" />" + s;
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
+        System.out.println(sb.toString());
+        assertEquals(expected, sb.toString());
+
     }
     
 }

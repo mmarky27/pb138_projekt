@@ -9,6 +9,7 @@ package dtdtoxmlschemaconverter;
 import dtdtoxmlschemaconverter.DataClasses.Attribute;
 import dtdtoxmlschemaconverter.DataClasses.DTDObject;
 import dtdtoxmlschemaconverter.DataClasses.ObjectType;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -66,7 +67,7 @@ public class DTDParserTest {
                 + "  <!ELEMENT narozen     (#CDATA)>";
     }
     
-        /**
+     /**
      * Test of parseDTD method, of class Converter.
      */
     @Test
@@ -83,74 +84,35 @@ public class DTDParserTest {
         assertTrue(elements.size() != result3.size());
     }
 
-    /*@Test
-    public void testParseElement() throws NoSuchMethodException, InvocationTargetException, IllegalArgumentException, IllegalAccessException {
-        Method method = Converter.class.getDeclaredMethod("parseElement", new Class[]{String.class});
-        method.setAccessible(true);
-        DTDObject result = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (jmeno, prijmeni)>"});
-        DTDObject result2 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (prijmeni, jmeno)>"});
-        DTDObject result3 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnanec   (jmeno | prijmeni)>"});
-        DTDObject result4 = (DTDObject) method.invoke(new Converter(), new java.lang.Object[]{"<!ELEMENT zamestnankyne   (jmeno, prijmeni)>"});
-        
-        assertEquals(elements.get(0), result);
-        assertTrue(!elements.get(0).equals(result2));
-        assertTrue(!elements.get(0).equals(result3));
-        assertTrue(!elements.get(0).equals(result4));
-    }*/
+    @Test
+    public void testCreateNullDTDParser(){
+        try {
+            DTDParser parser = new DTDParser(null);
+            fail();
+        }
+        catch (NullPointerException e) {
+            //OK
+        }
+    }
 
-    /*@Test
-    public void testParseAttributes() throws NoSuchMethodException, InvocationTargetException, IllegalArgumentException, IllegalAccessException {
-        Method method = Converter.class.getDeclaredMethod("parseAttributes", new Class[]{String.class});
-        method.setAccessible(true);
-        List<Attribute> result = (List<Attribute>) method.invoke(
-                new Converter(),
-                new java.lang.Object[]{
-                    "  <!ATTLIST zamestnanec\n"
-                + "            id          CDATA   #REQUIRED>\n"
-                + "            plat        CDATA   #IMPLIED\n"
-                + "            pohlavi     (muz | zena | jine)   #IMPLIED>"});
-        
-        assertEquals(attributes.size(), result.size());
-        assertArrayEquals(attributes.toArray(), result.toArray());
-    }*/
-
-    /*@Test
-    public void testParseAttribute() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException { //returns Attribute
-        Method method = Converter.class.getDeclaredMethod("parseAttribute", new Class[]{String.class});
-        method.setAccessible(true);
-        Attribute a = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnanec            id          CDATA   #REQUIRED>"});
-        Attribute a2 = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnanec            id          CDATA   #IMPLIED>"});
-        Attribute a3 = (Attribute) method.invoke(new Converter(), new java.lang.Object[]{"zamestnavatel            id          CDATA   #REQUIRED>"});
-        
-        assertEquals(attributes.get(0), a);
-        assertTrue(!attributes.get(0).equals(a2));
-        assertTrue(!attributes.get(0).equals(a3));
-
-    }*/
-    /**
-     * Test of getObjects method, of class DTDParser.
-     */
     @Test
     public void testGetObjects() {
-        System.out.println("getObjects");
-        DTDParser instance = null;
-        List<DTDObject> expResult = null;
-        List<DTDObject> result = instance.getObjects();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of printObjs method, of class DTDParser.
-     */
-    @Test
-    public void testPrintObjs() {
-        System.out.println("printObjs");
-        DTDParser instance = null;
-        instance.printObjs();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        DTDParser parser = new DTDParser(dtdToParse);
+        try {
+            parser.getObjects().remove(0);
+        }
+        catch (/*UnsupportedOperation*/Exception e){
+            //OK
+        }
     }
     
+    /*@Test
+    public void createObjects(String[] unparsedObjects){
+        String[] input = new String[] {
+            "ENTITY entity SYSTEM \"photoEntity.png\" NDATA png",
+            "NOTATION jpg PUBLIC \"JPG 1.0\" \"image/jpeg\"",
+            "ATTLIST sender company CDATA #FIXED \"Microsoft\"",
+            "ELEMENT human (man | woman | alien)" };
+        //dont know how to test private method without returning value
+    }*/
 }

@@ -8,6 +8,7 @@ package dtdtoxmlschemaconverter.DataClasses;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -21,6 +22,8 @@ public class DTDObject {
     private List<Attribute> attributes;
     
     public DTDObject (String name, ObjectType type, String content){
+        if(name == null || content == null)
+            throw new IllegalArgumentException("null argument to constructor");
         this.name = name;
         this.type = type;
         this.content = content;
@@ -84,4 +87,40 @@ public class DTDObject {
         return name + " || " + type + " || " + content;
 
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 11 * hash + Objects.hashCode(this.name);
+        hash = 11 * hash + Objects.hashCode(this.type);
+        hash = 11 * hash + Objects.hashCode(this.content);
+        hash = 11 * hash + Objects.hashCode(this.attributes);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DTDObject other = (DTDObject) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.type != other.type) {
+            return false;
+        }
+        if (!Objects.equals(this.content, other.content)) {
+            return false;
+        }
+        if (!Objects.equals(this.attributes, other.attributes)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

@@ -6,6 +6,8 @@
 
 package dtdtoxmlschemaconverter.DataClasses;
 
+import java.util.Objects;
+
 /**
  *
  * @author Patrik
@@ -17,6 +19,8 @@ public class Attribute {
     private String content;
     
     public Attribute(String parent, String name, String content) {
+        if(parent == null || name == null || content == null)
+            throw new IllegalArgumentException("null argument to constructor");
         this.parent = parent;
         this.name = name;
         this.content = content;
@@ -50,5 +54,36 @@ public class Attribute {
         return "ATT: " + parent + " || " + name +
                 " || " + content;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.parent);
+        hash = 41 * hash + Objects.hashCode(this.name);
+        hash = 41 * hash + Objects.hashCode(this.content);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Attribute other = (Attribute) obj;
+        if (!Objects.equals(this.parent, other.parent)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.content, other.content)) {
+            return false;
+        }
+        return true;
+    }
+    
     
 }

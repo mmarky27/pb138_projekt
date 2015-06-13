@@ -87,7 +87,7 @@ public class ConverterTest {
         assertTrue(!expected.equals(result3));
         */
         
-        //TODO assemblovani s entitama
+        //TODO assemblovani s entitama nebo notation
     }
     
     @Test
@@ -98,10 +98,16 @@ public class ConverterTest {
             + "<element ref=\"jmeno\" />" + s
             + "<element ref=\"narozen\" />"+ s
             + "</sequence>" + s
-            + "<attribute name=\"id\" type=\"string\" use=\"required\"" + s
-            + "<attribute name=\"id\" type=\"string\"" + s
-                //jak je to s tim enumem, se mi moc nechce psat jako nejake restriction, pockam, jak to udela Patas!
-            + "<attribute name=\"id\" type=\"enumeration\" values=\"muz|zena|jine\"" + s
+            + "<attribute name=\"id\" type=\"string\" use=\"required\" />" + s
+            + "<attribute name=\"plat\" type=\"string\" />" + s
+            + "<attribute name=\"pohlavi\" type=\"string\" >" + s
+               + "<simpleType>" + s
+                    + "<restriction>" + s
+                        + "<enumeration value=\"check\">" + s
+                        + "<enumeration value=\"cash\">" + s
+                    + "</restriction>" + s
+                + "</simpleType>" + s
+            + "</attribute>" + s
             + "</complexType>" + s
             + "</element>" + s;
         Method method = Converter.class.getDeclaredMethod("assembleElem", new Class[]{DTDObject.class, StringBuilder.class});
@@ -127,8 +133,6 @@ public class ConverterTest {
             + "</element>" + s;
         result  = (String) method.invoke(new Converter(), new java.lang.Object[]{new DTDObject("chleba", ObjectType.ELEMENT, "(ANY)"), new StringBuilder()});
         assertEquals(expected, result);
-        
-        //Mozna jeste mixed
     }
 
     @Test
@@ -143,13 +147,23 @@ public class ConverterTest {
         expected = "<attribute name=\"id\" type=\"string\" use=\"required\">";
         result = (String) method.invoke(new Converter(), new java.lang.Object[]{ attributes.get(0)});
         assertEquals(expected, result);
+        
+        result = (String) method.invoke(new Converter(), new java.lang.Object[]{ new Attribute("payment", "type", "(check|cash) \"cash\"")});
+        expected = "<attribute name=\"type\" type=\"string\" default=\"cash\">" + s
+                + "<simpleType>" + s
+                + "<restriction>" + s
+                + "<enumeration value=\"check\"/>" + s
+                + "<enumeration value=\"cash\"/>" + s
+                + "</restriction>" + s
+                + "</simpleType>" + s
+                + "</attribute>" + s;
+        assertEquals(expected, result);
     }
 
     @Test
     public void testAssembleAttrs() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        String expected = "<attribute name=\"plat\" type=\"string\"\n"
+        String expected = "<attribute name=\"plat\" type=\"string\">" + s
                 + "<attribute name=\"id\" type=\"string\" use=\"required\">";
-        //To nevim, jestli bude fungovat s tim List.class, uvidime rano
         Method method = Converter.class.getDeclaredMethod("assembleAttrs", new Class[]{List.class, StringBuilder.class});
         method.setAccessible(true);
         
@@ -157,6 +171,12 @@ public class ConverterTest {
         method.invoke(new Converter(), new java.lang.Object[]{ attributes.subList(0, 2),sb });
         
         assertEquals(expected, sb.toString());
+    }
+    
+    @Test
+    public void testAssembleAttrContent() {
+        fail();
+        //TODO
     }
     
     @Test
@@ -208,22 +228,12 @@ public class ConverterTest {
         method.setAccessible(true);
         List<String> result = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"(potato, egg, cheese)", ",", "(", ")"});
         List<String> result2 = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"(potato | (egg, cheese))", "|", "(", ")"});
-        
-        try {
-            List<String> result3 = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"(potato | (egg, cheese))", "invalid", "(", ")"});
-            fail("Invalid delimiter");
-        }
-        catch(IllegalArgumentException | InvocationTargetException e) {
-            //OK
-        }
-        
+                
         assertNotNull(result);
         assertEquals(3, result.size());
         
         assertNotNull(result2);
         assertEquals(2, result2.size());
-
-        //TODO
     }
 
     @Test
@@ -247,6 +257,18 @@ public class ConverterTest {
         expected = "<notation name=\"jpg\" public=SYSTEM system=\"image/jpeg\" />" + s;
         sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{ notation, sb });
+        assertEquals(expected, sb.toString());
+    }
+    
+    @Test
+    public void testAssembleEntity() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        DTDObject entity = new DTDObject("entity", ObjectType.ENTITY, "SYSTEM \"photoEntity.png\" NDATA png>");
+        String expected = "<!ENTITY entity SYSTEM \"photoEntity.png\" NDATA png>" + s;
+        Method method = Converter.class.getDeclaredMethod("assembleEntity", new Class[]{DTDObject.class, StringBuilder.class});
+        method.setAccessible(true);
+        
+        StringBuilder sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{ entity, sb });
         assertEquals(expected, sb.toString());
     }
     

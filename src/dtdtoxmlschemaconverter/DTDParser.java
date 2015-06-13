@@ -47,6 +47,10 @@ public class DTDParser {
                                             unparsedDTD.lastIndexOf(">"));
         String[] unparsedObjects = unparsedDTD.split(">\\s*<!");
 
+        for(String i : unparsedObjects){
+            System.out.println(i);
+        }
+
         createObjects(unparsedObjects);
         matchAttributes();
 
@@ -74,24 +78,44 @@ public class DTDParser {
             
             switch(temp[0]){
                 case "ENTITY":
-                    objects.add(new DTDObject(temp[1],ObjectType.ENTITY,temp[2]));
+                    addObject(temp[1], temp[2], ObjectType.ENTITY);
                     break;
                 case "ATTLIST":
                     //attributes.add(new Attribute(temp[1],temp[2]));
                     //this is all your fault, you know who
                     String[] temp2 = temp[2].split(" ", 2);
-                    attributes.add(new Attribute(temp[1], temp2[0],temp2[1]));
+                    addAttribute(temp[1], temp2[0], temp2[1]);
                     break;
                 case "ELEMENT":
-                    objects.add(new DTDObject(temp[1],ObjectType.ELEMENT,temp[2]));
+                    addObject(temp[1],temp[2],ObjectType.ELEMENT);
                     break;
                 case "NOTATION":
-                    objects.add(new DTDObject(temp[1],ObjectType.NOTATION,temp[2]));
+                    addObject(temp[1],temp[2],ObjectType.NOTATION);
                     break;
                 default:
                     System.out.println("unrecognised object");
             }
         }
+    }
+
+    private void addObject(String name, String content, ObjectType type){
+        DTDObject obj = new DTDObject(name, type, content);
+        for(DTDObject i : objects){
+            if(obj.getName().equals(i.getName())){
+                return;
+            }
+        }
+        objects.add(obj);
+    }
+
+    private void addAttribute(String parent, String name, String content){
+        Attribute att = new Attribute(parent,name,content);
+        for(Attribute i : attributes){
+            if(att.getParent().equals(i.getParent())){
+                return;
+            }
+        }
+        attributes.add(att);
     }
 
     private void matchAttributes(){

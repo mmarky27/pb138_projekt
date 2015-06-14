@@ -202,7 +202,7 @@ public class Converter {
             appendWithLineSep(sb, "<simpleType>");
             appendWithLineSep(sb, "<restriction>");
             enums.stream().forEach((en) -> {
-                appendWithLineSep(sb, MessageFormat.format("<enumeration value=\"{0}\"", en));
+                appendWithLineSep(sb, MessageFormat.format("<enumeration value=\"{0}\" />", en));
             });
             appendWithLineSep(sb, "</restriction>");
             appendWithLineSep(sb, "</simpleType>");
@@ -249,8 +249,13 @@ public class Converter {
         //jinak se jedná o typ omezení
         }else{
             int indOfSpace = content.indexOf(" ");
-            value = content.substring(0, indOfSpace);
-            content = content.substring(indOfSpace + 1).trim();
+            if (indOfSpace == -1) {
+                value = content;
+                content = "";
+            }else {
+                value = content.substring(0, indOfSpace);
+                content = content.substring(indOfSpace + 1).trim();
+            }
             switch (value) {
                 case "#REQUIRED":
                     sb.append(MessageFormat.format(" use=\"{0}\"", "required"));
@@ -294,19 +299,19 @@ public class Converter {
         //podle kvantifikátoru uloží výskyty
         if (content.endsWith("+")) {
             quantifier = " maxOccurs=\"unbounded\"";
-        }else if (content.endsWith("*")){
+        } else if (content.endsWith("*")) {
             quantifier = " minOccurs=\"0\" maxOccurs=\"unbounded\"";
-        }else if (content.endsWith("?")) {
-            quantifier = " minOccurs=\"0\"";           
+        } else if (content.endsWith("?")) {
+            quantifier = " minOccurs=\"0\"";
         }
-        
+
         //ostřihne obsah o kvantifikátor
         if (!quantifier.isEmpty()) {
             content = content.substring(0, content.length() - 1);
         }
-       
+
         content = trimOfSurroundingBrackets(content);
-        
+
         //výraz může obsahovat čárky jedině, když se jedná o sequence, tudíž se 
         //výraz rozstříhá na jednotlivé položky a ty se dále zpracují
         if (content.contains(",")) {
@@ -316,8 +321,8 @@ public class Converter {
                 assembleComplexContent(sb, subcont);
             });
             appendWithLineSep(sb, "</sequence>");
-        //taktéž může výraz obsahovat znak "|" jedině ve dvou případech
-        }else if (content.contains("|")) {
+            //taktéž může výraz obsahovat znak "|" jedině ve dvou případech
+        } else if (content.contains("|")) {
             //pokud obsahuje znak "#" jedná se o mixed content a výraz "#PCDATA"
             //musí být na začátku následovaný dalšími výrazy
             if (content.contains("#")) {
@@ -328,8 +333,8 @@ public class Converter {
                     assembleComplexContent(sb, subcont);
                 });
                 appendWithLineSep(sb, "</all>");
-            //jinak se jedná o výběr jedné z několika možností
-            } else { 
+                //jinak se jedná o výběr jedné z několika možností
+            } else {
                 ArrayList<String> subconts = splitContent(content, "|", "(", ")");
                 appendWithLineSep(sb, "<choice>");
                 subconts.stream().forEach((subcont) -> {
@@ -337,15 +342,15 @@ public class Converter {
                 });
                 appendWithLineSep(sb, "</choice>");
             }
-        //v posledním případě se jedná jen o samotný odkaz na element
-        }else {
+            //v posledním případě se jedná jen o samotný odkaz na element
+        } else {
             //pokud byl kvantifikátor specifikován musí se reference na element
             //obalit do sequence s příslušným řetězcem popisujícím výskyt elementu
             if (!quantifier.isEmpty()) {
                 appendWithLineSep(sb, MessageFormat.format("<sequence {0}>", quantifier));
                 appendWithLineSep(sb, MessageFormat.format("<element ref=\"{0}\" />", content));
                 appendWithLineSep(sb, "</sequence>");
-            }else {
+            } else {
                 appendWithLineSep(sb, MessageFormat.format("<element ref=\"{0}\" />", content));
             }
         }

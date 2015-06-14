@@ -110,11 +110,11 @@ public class DTDParser {
 
     private void addAttribute(String parent, String name, String content){
         Attribute att = new Attribute(parent,name,content);
-        for(Attribute i : attributes){
-            if(att.getParent().equals(i.getParent())){
-                return;
-            }
-        }
+//        for(Attribute i : attributes){
+//            if(att.getParent().equals(i.getParent())){
+//                return;
+//            }
+//        }
         attributes.add(att);
     }
 

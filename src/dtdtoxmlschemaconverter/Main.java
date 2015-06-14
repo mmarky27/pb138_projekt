@@ -50,4 +50,5 @@ public class Main {
         ContentManager.createXMLSchema(xmlSchema);
     
     }
+    //C:\Users\Patrik\Documents\NetBeansProjects\DTDtoXMLSchemaConverter\pb138_projekt\dist\DatabaseInventory.xml
 }

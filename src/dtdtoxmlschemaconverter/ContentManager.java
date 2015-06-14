@@ -116,7 +116,7 @@ public class ContentManager {
         
         //TODO: V puvodním XML souboru zmenit hlavicku (misto DTD) aby se odkazoval na soubor s XML schematem
         String toInsert = loadFile(path); //z tohoto stringu budu kopirovat jen radky bez dtd do stringu toSave
-        String toSave = null; //text, ktery pak ulozim do souboru (s referenci xsd tj. bez dtd)
+        String toSave = ""; //text, ktery pak ulozim do souboru (s referenci xsd tj. bez dtd)
         //ziskam korenovy element, za nej pak napojim toAdd
         Element rootEl=null; //korenovyelement
         try {
@@ -135,17 +135,16 @@ public class ContentManager {
         String line;
         BufferedReader reader = new BufferedReader(new StringReader(toInsert));
         try {
-            while ((line = reader.readLine()) != null) {
+            line = reader.readLine();
+            while (line != null) {
                 if (line.startsWith("<!DOCTYPE")) {
                     do { 
-                        continue; //preskakuju radky s dtd, dokud nenarazim az na kor.el.
-                    } while (!(line.startsWith("<"+rootEl.getTextContent())));
+                        line = reader.readLine();
+                    } while (!(line.startsWith("<"+rootEl.getTagName())));
+                    line = line.replaceFirst("\\s*>", toAdd + ">");
                 }
-                toSave.concat(line); //napojuju radky bez dtd
-                if (line.startsWith("<"+rootEl.getTextContent())) {
-                    //napojime za koren.element / pripadne jeste pred jeho id / toAdd
-                    line.replaceFirst(" ",toAdd); //do mezery vlozim toAdd-text uz je ohraniceny mezerami->mezery nechybi
-                }
+                toSave = toSave.concat(line + System.lineSeparator());
+                line = reader.readLine();
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -162,7 +161,7 @@ public class ContentManager {
         Path p = Paths.get(path);
         Path pp = p.getParent(); 
         try {
-            File newTextFile = new File(pp.toString()+"/newXml_WithXsd.txt");
+            File newTextFile = new File(pp.toString()+"/newXml_WithXsd.xml");
             FileWriter fw = new FileWriter(newTextFile);
             fw.write(file);
             fw.close();

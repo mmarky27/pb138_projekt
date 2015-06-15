@@ -101,10 +101,12 @@ public class ContentManager {
     public static void createXMLSchema(String xmlSchema) throws IOException {
         //ulozi xmlschema(string) do .xsd a pozmeni puv.xml -> ulozi ho jako novy soubor (neprepisuje!) jiz jako xsd
         String path = Main.path;
-        Path p = Paths.get(path);
-        Path pp = p.getParent(); //vracim se k adresari - ve stejnem jak puvodni xml bude i xsd
+        //Path p = Paths.get(path);
+        //System.out.println(p);
+        //Path pp = p.getParent(); //vracim se k adresari - ve stejnem jak puvodni xml bude i xsd
+       // System.out.println(pp);
         try {
-            File toSave = new File(pp.toString()+"/newschema.xsd");
+            File toSave = new File("newschema.xsd");
             FileOutputStream is = new FileOutputStream(toSave);
             OutputStreamWriter osw = new OutputStreamWriter(is);    
             Writer w = new BufferedWriter(osw);
@@ -129,7 +131,7 @@ public class ContentManager {
           }
        
         //toto se prida za korenovy element
-        String toAdd = " xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://www.w3.org/2001/XMLSchema' xsi:schemaLocation=\"http://www.w3.org/2001/XMLSchema newschema.xsd\" ";   
+        String toAdd = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema\" xsi:noNamespaceSchemaLocation=\"newschema.xsd\" ";   
         
         //prochazim radek po radku az na konec toInsert -> vkladam do toSave, kdyz je tam dtd tak preskakuju-nevkladam
         String line;
@@ -158,10 +160,10 @@ public class ContentManager {
     //saveFile predavam uz hotovy string vytvoreny createXMLSchema metodou
     public static void saveFile(String file) {
         String path = Main.path;
-        Path p = Paths.get(path);
-        Path pp = p.getParent(); 
+        //Path p = Paths.get(path);
+        //Path pp = p.getParent(); 
         try {
-            File newTextFile = new File(pp.toString()+"/newXml_WithXsd.xml");
+            File newTextFile = new File("newXml_WithXsd.xml");
             FileWriter fw = new FileWriter(newTextFile);
             fw.write(file);
             fw.close();

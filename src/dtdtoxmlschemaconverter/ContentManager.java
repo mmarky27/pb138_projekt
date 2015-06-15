@@ -41,8 +41,14 @@ public class ContentManager {
         try {
             DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
             DocumentBuilder db=dbf.newDocumentBuilder();
-            Document doc=db.parse(new File(path));
-            systemId = doc.getDoctype().getSystemId();
+            File tmp = new File(path);
+            if(tmp.canRead()){
+                Document doc=db.parse(tmp);
+                systemId = doc.getDoctype().getSystemId();
+            }else{
+                return null;
+            }
+            
           } catch (  SAXException | ParserConfigurationException | IOException e) {
               System.out.println("error");
           }
@@ -84,6 +90,9 @@ public class ContentManager {
 
     public static String loadFile(String path) throws IOException {
         File file = new File(path);
+            if(!file.canRead()){
+                return null;
+            }
         StringBuilder fileContents = new StringBuilder((int)file.length());
         Scanner scanner = new Scanner((Readable) new BufferedReader(new FileReader(file)));
         String lineSeparator = System.getProperty("line.separator");

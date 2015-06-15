@@ -34,6 +34,10 @@ public class Main {
         System.out.printf(path);
 
         String extracted = ContentManager.extractDTD(path);
+        if(extracted == null){
+            System.out.println("Soubor nenalezen");
+            return;
+        }
         System.out.printf(extracted);
 
         List<DTDObject> tmp = DTDParser.output(extracted);

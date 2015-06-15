@@ -100,19 +100,21 @@ public class DTDParserTest {
         DTDParser parser = new DTDParser(dtdToParse);
         try {
             parser.getObjects().remove(0);
+            fail();
         }
-        catch (/*UnsupportedOperation*/Exception e){
+        catch (UnsupportedOperationException e){
             //OK
         }
     }
     
-    /*@Test
-    public void createObjects(String[] unparsedObjects){
+    @Test
+    public void testCreateObjects(){
         String[] input = new String[] {
             "ENTITY entity SYSTEM \"photoEntity.png\" NDATA png",
             "NOTATION jpg PUBLIC \"JPG 1.0\" \"image/jpeg\"",
             "ATTLIST sender company CDATA #FIXED \"Microsoft\"",
             "ELEMENT human (man | woman | alien)" };
+        
         //dont know how to test private method without returning value
-    }*/
+    }
 }

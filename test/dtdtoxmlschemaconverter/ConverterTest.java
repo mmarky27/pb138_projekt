@@ -51,7 +51,7 @@ public class ConverterTest {
 
         dtdToParse = "<!ELEMENT zamestnanec (jmeno, narozen)>\n"
                 + "  <!ATTLIST zamestnanec\n"
-                + "            id          CDATA   #REQUIRED>\n"
+                + "            id          CDATA   #REQUIRED\n"
                 + "            plat        CDATA   #IMPLIED\n"
                 + "            pohlavi     (muz | zena | jine)   #IMPLIED>\n"
                 + "  <!ELEMENT jmeno       (#PCDATA)>\n"
@@ -67,6 +67,10 @@ public class ConverterTest {
                 + "  <!NOTATION jpg PUBLIC \"JPG 1.0\" \"image/jpeg\">\n"
                 + "  <!ELEMENT jmeno       (#PCDATA)>\n"
                 + "  <!ELEMENT narozen     (#CDATA)>";
+    }
+    
+    private String trimAllWhitespaces(String s) {
+        return s.replaceAll("\\s+", " ");
     }
     
      /**
@@ -94,18 +98,18 @@ public class ConverterTest {
             + "</simpleType>" + s
             + "</attribute>" + s
             + "</complexType>" + s
-            + "</element>" + s;
+            + "</element>" + s + s
+            + "<element name=\"jmeno\" type=\"string\" />" + s + s
+            + "<element name=\"narozen\" type=\"string\" />" + s + s + s + s + s
+            + "</schema>" + s;
         String result = Converter.assembleXMLSchema(elements);
         String result2 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse));
         String result3 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse2));
         String result4 = Converter.assembleXMLSchema(DTDParser.output(dtdToParse3));
 
-        //TODO
-        System.out.println(result);
-        assertEquals(expected, result);
-        //assertEquals(expected, result2);
-        //assertTrue(!expected.equals(result3));
-        
+        assertEquals(trimAllWhitespaces(expected), trimAllWhitespaces(result));
+        assertEquals(trimAllWhitespaces(expected), trimAllWhitespaces(result2));
+        assertTrue(!expected.equals(result3));
         
         //TODO assemblovani s entitama nebo notation
     }
@@ -122,7 +126,7 @@ public class ConverterTest {
             + "<attribute name=\"plat\" type=\"string\" use=\"optional\" />" + s
             + "<attribute name=\"pohlavi\" use=\"optional\">" + s
             + "<simpleType>" + s
-            + "<restriction>" + s
+            + "<restriction base=\"string\">" + s
             + "<enumeration value=\"muz \" />" + s
             + "<enumeration value=\"zena \" />" + s
             + "<enumeration value=\"jine\" />" + s
@@ -143,10 +147,10 @@ public class ConverterTest {
         method.invoke(new Converter(), new java.lang.Object[]{new DTDObject("chleba", ObjectType.ELEMENT, "#PCDATA"), sb});
         assertEquals(expected, sb.toString());
         
-        expected = "<element name=\"chleba\" />" + s + s;
+        /*expected = "<element name=\"chleba\" />" + s + s;
         sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{new DTDObject("chleba", ObjectType.ELEMENT, "EMPTY"), sb});
-        assertEquals(expected, sb.toString());
+        assertEquals(expected, sb.toString());*/
 
         expected = "<element name=\"chleba\" >" + s
             + "<complexType>" + s
@@ -185,7 +189,6 @@ public class ConverterTest {
             + "</restriction>" + s
             + "</simpleType>" + s
             + "</attribute>" + s;
-        System.out.println(sb.toString());
         assertEquals(expected, sb.toString());
     }
 
@@ -208,9 +211,8 @@ public class ConverterTest {
         method.setAccessible(true);
         StringBuilder sb = new StringBuilder();
         String result = (String) method.invoke(new Converter(), new java.lang.Object[]{"\"defaultPotato\"", sb});        
-        System.out.println(result);
+        //System.out.println(result);
         //assertEquals(expected, sb.toString());
-        
     }
     
     @Test
@@ -253,7 +255,6 @@ public class ConverterTest {
             + "</all>" + s;
         sb = new StringBuilder();
         method.invoke(new Converter(), new java.lang.Object[]{sb, "(#PCDATA | nazev)*"});
-        System.out.println(sb.toString());
         assertEquals(expected, sb.toString());
     }
 

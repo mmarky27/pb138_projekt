@@ -325,8 +325,8 @@ public class Converter {
         } else if (content.contains("|")) {
             //pokud obsahuje znak "#" jedná se o mixed content a výraz "#PCDATA"
             //musí být na začátku následovaný dalšími výrazy
-            if (content.contains("#")) {
-                content = content.replaceAll("\\s*#\\w*\\s*|", "");
+            if (content.contains("#") && (quantifier.equals(" minOccurs=\"0\" maxOccurs=\"unbounded\""))) {
+                content = content.replaceAll("\\s*#\\w*\\s*[|]", "");
                 ArrayList<String> subconts = splitContent(content, "|", "(", ")");
                 appendWithLineSep(sb, "<all minOccurs=\"0\">");
                 subconts.stream().forEach((subcont) -> {

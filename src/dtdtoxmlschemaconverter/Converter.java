@@ -200,7 +200,7 @@ public class Converter {
             ArrayList<String> enums = splitContent(type.substring(1, type.length() - 1), "|", "(", ")");
             appendWithLineSep(sb, ">");
             appendWithLineSep(sb, "<simpleType>");
-            appendWithLineSep(sb, "<restriction>");
+            appendWithLineSep(sb, "<restriction base=\"string\">");
             enums.stream().forEach((en) -> {
                 appendWithLineSep(sb, MessageFormat.format("<enumeration value=\"{0}\" />", en));
             });

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE zamestnanec SYSTEM "C:\Dropbox\pb138\project_final_mine\zamestnanec.dtd">
+<zamestnanec id="101">
+  <jmeno>Jan</jmeno>
+  <prijmeni>Novák</prijmeni>
+  <plat>25000</plat>
+  <narozen>1965-12-24</narozen>
+</zamestnanec>

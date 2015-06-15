@@ -129,7 +129,7 @@ public class ContentManager {
           }
        
         //toto se prida za korenovy element
-        String toAdd = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema\" xsi:noNamespaceSchemaLocation=\"newschema.xsd\" ";   
+        String toAdd = " xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://www.w3.org/2001/XMLSchema' xsi:schemaLocation=\"http://www.w3.org/2001/XMLSchema newschema.xsd\" ";   
         
         //prochazim radek po radku az na konec toInsert -> vkladam do toSave, kdyz je tam dtd tak preskakuju-nevkladam
         String line;

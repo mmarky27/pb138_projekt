@@ -87,7 +87,7 @@ public class DTDParser {
                     addObject(temp[1],temp[2],ObjectType.NOTATION);
                     break;
                 default:
-                    System.out.println("unrecognised object");
+                    //System.out.println("unrecognised object");
             }
         }
     }

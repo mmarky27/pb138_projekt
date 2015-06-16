@@ -49,5 +49,7 @@ public class Main {
         //vytvoreni souboru .xsd:
         ContentManager.createXMLSchema(xmlSchema);
     
+        System.out.println("Done!");
+        
     }
 }

@@ -47,10 +47,6 @@ public class DTDParser {
                                             unparsedDTD.lastIndexOf(">"));
         String[] unparsedObjects = unparsedDTD.split(">\\s*<!");
 
-        for(String i : unparsedObjects){
-            System.out.println(i);
-        }
-
         createObjects(unparsedObjects);
         matchAttributes();
 
@@ -109,7 +105,7 @@ public class DTDParser {
     private void addAttribute(String parent, String name, String content){
         Attribute att = new Attribute(parent,name,content);
         for(Attribute i : attributes){
-            if(att.getName().equals(i.getName())){
+            if(att.getName().equals(i.getName()) && att.getParent().equals(i.getParent())){
                 return;
             }
         }

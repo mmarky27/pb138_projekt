@@ -31,14 +31,15 @@ public class Main {
             sc.close();
             System.out.println("You entered: " + path);
         }
-        System.out.printf(path);
+        //System.out.printf(path);
 
         String extracted = ContentManager.extractDTD(path);
         if(extracted == null){
             System.out.println("Soubor nenalezen");
             return;
         }
-        System.out.printf(extracted);
+        //System.out.printf(extracted);
+
 
         List<DTDObject> tmp = DTDParser.output(extracted);
 

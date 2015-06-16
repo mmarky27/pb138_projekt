@@ -50,7 +50,7 @@ public class ContentManager {
             }
             
           } catch (  SAXException | ParserConfigurationException | IOException e) {
-              System.out.println("error");
+              System.out.println(e.getMessage());
           }
         
         if (systemId == null) {
@@ -77,9 +77,7 @@ public class ContentManager {
                 int firstOcc = fileString.indexOf("[");
                 int lastOcc = fileString.lastIndexOf("]");
                 StringBuilder builder = new StringBuilder();
-                for (int i=firstOcc+1; i<lastOcc; i++) {
-                    builder.append(fileString.charAt(i));
-                }
+                builder.append(fileString.substring(firstOcc + 1, lastOcc));
                 String out = builder.toString();
                 dtd = out.concat(loadFile(systemId)); //za interni out string napojuju ten z .dtd souboru
             }
@@ -97,8 +95,11 @@ public class ContentManager {
         Scanner scanner = new Scanner((Readable) new BufferedReader(new FileReader(file)));
         String lineSeparator = System.getProperty("line.separator");
         try {
-            while (scanner.hasNextLine()) {        
-                fileContents.append(scanner.nextLine() + lineSeparator);
+            while (scanner.hasNextLine()) { 
+                String line = scanner.nextLine();
+                if (!line.startsWith("<?")) {
+                    fileContents.append(line + lineSeparator);
+                }
             }
             return fileContents.toString();
         } finally {

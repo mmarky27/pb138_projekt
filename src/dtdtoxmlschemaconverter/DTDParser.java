@@ -81,8 +81,6 @@ public class DTDParser {
                     addObject(temp[1], temp[2], ObjectType.ENTITY);
                     break;
                 case "ATTLIST":
-                    //attributes.add(new Attribute(temp[1],temp[2]));
-                    //this is all your fault, you know who
                     String[] temp2 = temp[2].split(" ", 2);
                     addAttribute(temp[1], temp2[0], temp2[1]);
                     break;
@@ -110,11 +108,11 @@ public class DTDParser {
 
     private void addAttribute(String parent, String name, String content){
         Attribute att = new Attribute(parent,name,content);
-//        for(Attribute i : attributes){
-//            if(att.getParent().equals(i.getParent())){
-//                return;
-//            }
-//        }
+        for(Attribute i : attributes){
+            if(att.getName().equals(i.getName())){
+                return;
+            }
+        }
         attributes.add(att);
     }
 

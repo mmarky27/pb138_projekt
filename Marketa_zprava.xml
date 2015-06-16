@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+
+<article xmlns="http://docbook.org/ns/docbook">
+	<title>DTD to XML Schema Converter: Markéta Umlaufová</title>
+	<info>
+		<author>
+			<personname>
+				<firstname>Markéta</firstname>
+				<surname>Umlaufová</surname>
+			</personname>
+		</author>
+	</info>
+	<section>
+		<title>DTD to XML Schema Converter - Markéta Umlaufová</title>
+		<para>
+			Prvním krokem byla volba tématu. Téma jsem zvolila já, kolegové z týmu jej následně odsouhlasili.  
+		</para>
+                <para>
+			Mým úkolem bylo postarat se o načítání xml souboru s DTD, následně rozpoznat typ DTD a předat DTD kolegovi.
+		</para>
+                <para>
+			Až kolegové zkonstruovali dle DTD odpovídající XML schéma, měla jsem za úkol XSD uložit a v xml souboru změnit referenci DTD na referenci XSD.
+		</para>
+		<para>
+			Před implementací jsem nejdříve založila projekt na GitHubu a Wiki, kterou jsem také měla na starost. 
+		</para>
+		<para>
+			Během projektu jsem se snažila členy týmu motivovat, abychom pracovali průběžně. Myslím, že jsme spolupracovali dobře a navzájem se podporovali.
+		</para>
+                
+		<section>
+			<title>DTD</title>
+			<para>
+				
+                                Začala jsem pracovat až po promyšlení vhodného postupu. Nastudovala jsem materiály o podobách DTD a při implementaci jsem z těchto informací čerpala.
+		
+			</para>
+			<para>
+			
+				Nejdřive dojde k rozpoznání - zda je DTD externí, interní, či externí i interní zároveň. 
+				
+			</para>
+			<para>
+				
+				Vyextrahované DTD předávám metodě, kterou měl již na starost kolega.
+				
+			</para>
+			
+		</section>
+		<section>
+			<title>XSD</title>
+			<para>
+				Uložila jsem výsledné XSD do souboru a poté pozměnila původní xml soubor tak, aby odkazoval na XSD.
+			</para>
+		</section>
+	
+	</section>
+</article>

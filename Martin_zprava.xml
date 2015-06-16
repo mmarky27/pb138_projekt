@@ -1,0 +1,124 @@
+    <title>Záverečná správa</title>
+
+    <author>
+      <firstname>Jiří</firstname>
+
+      <surname>Vrbka</surname>
+
+      <affiliation>
+        <orgname/>
+      </affiliation>
+    </author>
+
+    <pubdate>1.6.2015</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Projekt RSS/Atom Reader - Jiří Vrbka</title>
+
+    <para>Cílem projektu bylo vytvoření RSS čtečky schopné zpracovávat zdroje (feeds) z veřejných zdrojů, ukládat do kategorií a zobrazovat je.
+    Požadavky:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>správně rozpoznat a zpracovat RSS/ATOM kanál.</para>
+      </listitem>
+
+      <listitem>
+        <para>Možnost vytváření kategorií</para>
+      </listitem>
+
+      <listitem>
+        <para>Ukládání do databáze</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Projekt, psaný v jazyce C#, byl vytvářen pomocí webové aplikace Github</para>
+
+    <section>
+      <title>Tým a rozdělení úloh</title>
+
+      <itemizedlist>
+        <listitem>
+          <para><emphasis role="bold">Bc. Michael Rádl</emphasis> Winforms </para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Jakub Matuška</emphasis> - Backend,
+          databáze v XML, GUI</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Lukáš Findura</emphasis> - návrhové
+          diagramy, wiki a web stránka</para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Jiří Vrbka</emphasis> - unit
+          testy a různé úpravy</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section>
+      <title>Průběžná práce</title>
+
+      <para>S projektem se začalo už od prvních dní zadání, vytvořili jsme grafy pro lepší zpracování a následnou implementaci. Aktivně jsme používali github issues správu.</para>
+    </section>
+  </section>
+
+  <section>
+    <title>Moje úloha</title>
+
+    <para>V projektu jsem dal dohromady tým, který byl opravdu skvělý. Osobně jsem sestavoval unit testy a prováděl drobné korektury a zpracování vyjímek</para>
+  </section>
+</article>
+
+
+<?xml version="1.0" ?>
+
+<article xmlns="http://docbook.org/ns/docbook">
+	<title>DTD to XML Schema Converter: Martin Golomb</title>
+	<info>
+		<author>
+			<personname>
+				<firstname>Martin</firstname>
+				<surname>Golomb</surname>
+			</personname>
+		</author>
+	</info>
+	<section>
+		<title>DTD to XML Schema Converter - Martin Golomb</title>
+		<para>
+			Prvním krokem byla volba tématu. Na tématu jsme se všichni shodli. Již od počátku jsme měli představu, jak budeme na projektu pracovat.
+		</para>
+                <para>
+			Mým úkolem bylo vytvořit unit testy pro projekt.
+		</para>
+                <para>
+			Testoval jsem hlavně třídy pro parsování DTD a sestavení prvků pro výsledné xml schéma. Testování třídy ContentManager (sloužící k extrahování dtd a uložení xml schéma) je podle mě spíše objektem integračního testování.
+		</para>
+                <para>
+                        Dával jsem členům také zpětnou vazbu k jejich kódu a diskutovali jsme svůj postup.
+                </para>
+                <para>
+			Během projektu jsme se navzájem motivovali a myslím, že je to na výsledku znát.
+		</para>
+                
+		<section>
+			<title>Unit testy</title>
+			<para>
+
+                                Již od začátku mi bylo podle návrhu aplikace jasné, že většina metod bude privátních, proto jsem musel přijít na způsob, jak je testovat. Jako vhodné přístup k řešení problému bylo využít principu reflexe s jejíž pomocí jsem k takovým metodám přistupoval.
+		
+			</para>
+			<para>
+				
+				Jelikož mnoho metod pracuje s textovámi řetězci, testy často porovnávají očekávaný a výsledný výstup metod.
+				
+			</para>
+			
+		</section>
+	
+	</section>
+</article>

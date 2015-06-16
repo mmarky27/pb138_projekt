@@ -22,7 +22,7 @@ public class DTDObject {
     private List<Attribute> attributes;
     
     public DTDObject (String name, ObjectType type, String content){
-        if(name == null || content == null)
+        if(name == null || type == null || content == null)
             throw new IllegalArgumentException("null argument to constructor");
         this.name = name;
         this.type = type;

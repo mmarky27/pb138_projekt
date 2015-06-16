@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
  */
 public class DTDParserTest {
     
-    private String dtdToParse;
     private String dtdToParse2;
     private String dtdToParse3;
     private List<DTDObject> elements = new ArrayList<>();
@@ -48,13 +47,6 @@ public class DTDParserTest {
         elements.add(elemJmeno);
         elements.add(elemNarozen);
 
-        dtdToParse = "<!ELEMENT zamestnanec (jmeno, narozen)>\n"
-                + "  <!ATTLIST zamestnanec\n"
-                + "            id          CDATA   #REQUIRED\n"
-                + "            plat        CDATA   #IMPLIED\n"
-                + "            pohlavi     (muz | zena | jine)   #IMPLIED>\n"
-                + "  <!ELEMENT jmeno       (#PCDATA)>\n"
-                + "  <!ELEMENT narozen     (#PCDATA)>";
         dtdToParse2 = "<!ELEMENT zamestnanec (jmeno, narozen)>\n"
                 + "  <!ATTLIST zamestnanec      id          CDATA   #REQUIRED>\n"
                 + "  <!ATTLIST zamestnanec      plat        CDATA   #IMPLIED>\n"
@@ -77,12 +69,9 @@ public class DTDParserTest {
      */
     @Test
     public void testOutput() {
-        List<DTDObject> result = DTDParser.output(dtdToParse);
         List<DTDObject> result2 = DTDParser.output(trimAllWhitespaces(dtdToParse2));
         List<DTDObject> result3 = DTDParser.output(dtdToParse3);
         
-        //assertEquals(elements.size(), result.size());
-        //assertArrayEquals(elements.toArray(), result.toArray());
         for(DTDObject d : elements) {
             d.setContent(trimAllWhitespaces(d.getContent()));
             if(d.getType().equals(ObjectType.ELEMENT))
@@ -107,7 +96,7 @@ public class DTDParserTest {
 
     @Test
     public void testGetObjects() {
-        DTDParser parser = new DTDParser(dtdToParse);
+        DTDParser parser = new DTDParser(dtdToParse2);
         try {
             parser.getObjects().remove(0);
             fail();
@@ -122,17 +111,20 @@ public class DTDParserTest {
         String[] input = new String[] {
             "ENTITY entity SYSTEM \"photoEntity.png\" NDATA png",
             "NOTATION jpg PUBLIC \"JPG 1.0\" \"image/jpeg\"",
-            "ATTLIST sender company CDATA #FIXED \"Microsoft\"",
             "ELEMENT human (man | woman | alien)" };
+        DTDObject[] expected = new DTDObject[] {
+            new DTDObject("entity", ObjectType.ENTITY, "SYSTEM \"photoEntity.png\" NDATA png"),
+            new DTDObject("jpg", ObjectType.NOTATION, "PUBLIC \"JPG 1.0\" \"image/jpeg\""),
+            new DTDObject("human", ObjectType.ELEMENT, "(man | woman | alien)")};
         
         DTDParser parser = new DTDParser("fakeDTD");
         
-        //TODOOOOOOOOOO
-        //String expected = "<notation name=\"jpg\" public=\"JPG 1.0\" />" + s;
         Method method = DTDParser.class.getDeclaredMethod("createObjects", new Class[]{String[].class});
         method.setAccessible(true);
         
         method.invoke(parser, new java.lang.Object[]{ input });
         assertEquals(3, parser.getObjects().size());
+        
+        assertArrayEquals(parser.getObjects().toArray(), expected);
     }
 }

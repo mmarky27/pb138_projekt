@@ -73,9 +73,6 @@ public class ConverterTest {
         return s.replaceAll("\\s+", " ");
     }
     
-     /**
-     * Test of assembleXMLSchema method, of class Converter.
-     */
     @Test
     public void testAssembleXMLSchema() {
         String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + s
@@ -109,9 +106,8 @@ public class ConverterTest {
 
         assertEquals(trimAllWhitespaces(expected), trimAllWhitespaces(result));
         assertEquals(trimAllWhitespaces(expected), trimAllWhitespaces(result2));
-        assertTrue(!expected.equals(result3));
-        
-        //TODO assemblovani s entitama nebo notation
+        assertEquals(trimAllWhitespaces(expected), trimAllWhitespaces(result3));
+        assertTrue(!trimAllWhitespaces(expected).equals(trimAllWhitespaces(result4)));
     }
     
     @Test
@@ -147,11 +143,6 @@ public class ConverterTest {
         method.invoke(new Converter(), new java.lang.Object[]{new DTDObject("chleba", ObjectType.ELEMENT, "#PCDATA"), sb});
         assertEquals(expected, sb.toString());
         
-        /*expected = "<element name=\"chleba\" />" + s + s;
-        sb = new StringBuilder();
-        method.invoke(new Converter(), new java.lang.Object[]{new DTDObject("chleba", ObjectType.ELEMENT, "EMPTY"), sb});
-        assertEquals(expected, sb.toString());*/
-
         expected = "<element name=\"chleba\" >" + s
             + "<complexType>" + s
             + "<sequence>" + s
@@ -206,13 +197,28 @@ public class ConverterTest {
     
     @Test
     public void testAssembleAttrContent() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        //String expected = "" + s;
+        String expected = " default=\"defaultValue\"";
         Method method = Converter.class.getDeclaredMethod("assembleAttrContent", new Class[]{String.class, StringBuilder.class});
         method.setAccessible(true);
+        
         StringBuilder sb = new StringBuilder();
-        String result = (String) method.invoke(new Converter(), new java.lang.Object[]{"\"defaultPotato\"", sb});        
-        //System.out.println(result);
-        //assertEquals(expected, sb.toString());
+        method.invoke(new Converter(), new java.lang.Object[]{"\"defaultValue\"", sb});
+        assertEquals(expected, sb.toString());
+
+        expected = " use=\"required\"";
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{"#REQUIRED", sb});
+        assertEquals(expected, sb.toString());
+
+        expected = " use=\"optional\"";
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{"#IMPLIED", sb});
+        assertEquals(expected, sb.toString());
+
+        expected = " fixed=\"fixedValue\"";
+        sb = new StringBuilder();
+        method.invoke(new Converter(), new java.lang.Object[]{"#FIXED \"fixedValue\"", sb});
+        assertEquals(expected, sb.toString());
     }
     
     @Test
@@ -265,12 +271,22 @@ public class ConverterTest {
         
         List<String> result = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"(potato, egg), cheese", ",", "(", ")"});
         List<String> result2 = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"potato | (egg, cheese) | bacon", "|", "(", ")"});
-        
-        assertNotNull(result);
+        List<String> result3 = (ArrayList<String>) method.invoke(new Converter(), new java.lang.Object[]{"(potato, apple) | (banana, steak) | (pineapple, cheese) | anotherFood", "|", "(", ")" });
+
+        List<String> expected = new ArrayList<String>();
+        expected.add("(potato, egg)"); expected.add("cheese");
         assertEquals(2, result.size());
-        
-        assertNotNull(result2);
+        assertArrayEquals(expected.toArray(), result.toArray());
+
+        expected.clear();
+        expected.add("potato "); expected.add("(egg, cheese) "); expected.add("bacon");
         assertEquals(3, result2.size());
+        assertArrayEquals(expected.toArray(), result2.toArray());
+        
+        expected.clear();
+        expected.add("(potato, apple) "); expected.add("(banana, steak) "); expected.add("(pineapple, cheese) "); expected.add("anotherFood");
+        assertEquals(4, result3.size());
+        assertArrayEquals(expected.toArray(), result3.toArray());
     }
 
     @Test
@@ -308,5 +324,4 @@ public class ConverterTest {
         method.invoke(new Converter(), new java.lang.Object[]{ entity, sb });
         assertEquals(expected, sb.toString());
     }
-    
 }

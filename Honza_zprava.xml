@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" ?>
+
+<article xmlns="http://docbook.org/ns/docbook">
+	<title>DTD to XML Schema Converter: Jan Křenek</title>
+	<info>
+		<author>
+			<personname>
+				<firstname>Jan</firstname>
+				<surname>Křenek</surname>
+			</personname>
+		</author>
+	</info>
+	<section>
+		<title>DTD to XML Schema Converter - Jan Křenek</title>
+		<para>
+			Prvním krokem byla volba tématu, tady žádne problémy nebyly, protože na témě jsme se všichni shodli.
+		</para>
+
+		<para>
+			Mojím úkolem bylo po obdržení nesparsovaného DTD stringu, ho sparsovat.
+		</para>
+		<para>
+			S mojí části projektu jsem neměl příliš mnoho problémů a skončil jsem relativně brzy a začal jsem pomáhat ostatním, zejména s konzolovovou aplikaci a debuggingem.
+		</para>
+		<para>
+			Toto byl můj první skupinový projekt a spolupráci s ostatními členy teamu jsem si užil.
+		</para>
+
+		<section>
+			<title>Zpracování DTD</title>
+			<para>
+				Moje část začíná obdržením nezparsovaného DTD stringu, který nasledně zpracuji. Výsledná data jsem se rozhodl uložit do vhodně vytvořených tříd, které dále předám kolegovi.
+			</para>
+		</section>
+
+		<section>
+			<title>Zpracování DTD</title>
+			<para>
+				Nesparsovaný DTD string, jsem si rozdělil na několik po značkách a každou vložil do vhodné třídy. Nasledný list výsledných objektů posílám dále kolegovi.
+
+			</para>
+		</section>
+
+
+	</section>
+</article>

@@ -43,12 +43,7 @@ public class Main {
 
         List<DTDObject> tmp = DTDParser.output(extracted);
 
-        /*
-        for(DTDObject i : tmp){
-            System.out.println(i);
-            i.getAttributes().forEach(System.out::println);
-        }*/
-
+        
         String xmlSchema = Converter.assembleXMLSchema(tmp);
 
         //vytvoreni souboru .xsd:

@@ -1,0 +1,50 @@
+scanner.nextLine(<?xml version="1.0" ?>
+
+<article xmlns="http://docbook.org/ns/docbook">
+	<title>DTD to XML Schema Converter: Patrik Novák</title>
+	<info>
+		<author>
+			<personname>
+				<firstname>Patrik</firstname>
+				<surname>Novák</surname>
+			</personname>
+		</author>
+	</info>
+	<section>
+		<title>DTD to XML Schema Converter - Patrik Novák</title>
+		<para>
+			Prvním krokem byla volba tématu. Na tématu jsme se všichni shodli.
+		</para>
+                <para>
+			Mým úkolem bylo vytvořit třídu na sestavování XML schematu z tříd balíku DataClasses.
+		</para>
+                <para>
+			Sestavování schematu se odvíjelo z atributů tříd Dataclasses typu String a jako String bylo pomocí StringBuilderu konstruováno.
+		</para>
+                <para>
+                        Dával jsem členům také zpětnou vazbu k jejich kódu, zejména členům, kteří dělali na parsování DTD a zpracování souborů.
+                </para>
+                <para>
+			Spolupráce byla všestranná a nevyskytly se v ní žádné problémy.
+		</para>
+                
+		
+		<section>
+			<title>Sestavování XML schematu</title>
+			<para>
+				DTD nepodporuje jmenné prostory, tudíž jsem vytvořil XSD hlavičku takovou, že používala defaultní jmenný prostor bez prefixu. 
+			</para>
+                        <para>
+                                Dále jsem sestavoval elementy, notace a entity podle atributů třídy DTDObject.
+                                XML schema nepodporuje entity, tudíž pokud DTD obsahovalo entity, zůstaly ve formátu DTD a byly vloženy do XML schematu.
+                                Notace byly převedeny jednoduchou třídou.
+                                Sestavení elementů bylo rozděleno na jednoduché (obashující text), speciální případy (kdy je element prázdný, nebo obsahuje libovolný obsah)
+                                a elementy s komplexním obsahem (sekvence s kvantifikátory, mixed content, výběr z možných hodnot atd.), který se do sebe mohl rekurzivně zanořovat.
+                        </para>
+                        <para>
+                                Atributy se sestavovaly s atributů třídy Attribute.
+                        </para>
+		</section>
+	
+	</section>
+</article>

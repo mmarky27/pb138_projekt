@@ -59,9 +59,7 @@ public class ContentManager {
             int firstOcc = fileString.indexOf("[");
             int lastOcc = fileString.lastIndexOf("]");
             StringBuilder builder = new StringBuilder();
-            for (int i=firstOcc+1; i<lastOcc; i++) {
-                builder.append(fileString.charAt(i));
-            }
+            builder.append(fileString.substring(firstOcc + 1, lastOcc));
             dtd = builder.toString();
         }
         //2.externe -> najdu .dtd soubor, predam jeho obsah (string)
@@ -97,7 +95,7 @@ public class ContentManager {
         try {
             while (scanner.hasNextLine()) { 
                 String line = scanner.nextLine();
-                if (!line.startsWith("<?")) {
+                if (!line.startsWith("<?") || !path.endsWith(".dtd")) {
                     fileContents.append(line + lineSeparator);
                 }
             }

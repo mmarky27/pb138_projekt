@@ -81,7 +81,7 @@ public class ContentManager {
                     builder.append(fileString.charAt(i));
                 }
                 String out = builder.toString();
-                dtd = out.concat(loadFile(systemId)); //Za interni out string napojuju ten z .dtd souboru
+                dtd = out.concat(loadFile(systemId)); //za interni out string napojuju ten z .dtd souboru
             }
         }
         return dtd;
